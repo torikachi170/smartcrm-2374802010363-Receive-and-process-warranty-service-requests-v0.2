@@ -115,13 +115,35 @@ def test_classify_falls_back_to_other_category() -> None:
 def test_classify_rejects_short_description_with_contract_status() -> None:
     response = client.post(
         "/api/classify",
-        json={"issue_desc": "Máy hỏng"},
+        json={"issue_desc": "x" * 9},
         headers=authorization_headers(),
     )
 
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "VALIDATION_FAILED"
     assert "issue_desc" in response.json()["error"]["fields"]
+
+
+def test_classify_accepts_minimum_description_length() -> None:
+    response = client.post(
+        "/api/classify",
+        json={"issue_desc": "x" * 10},
+        headers=authorization_headers(),
+    )
+
+    assert response.status_code == 200
+    assert response.json()["category_name"] == "KHAC"
+
+
+def test_classify_accepts_maximum_description_length() -> None:
+    response = client.post(
+        "/api/classify",
+        json={"issue_desc": "x" * 2000},
+        headers=authorization_headers(),
+    )
+
+    assert response.status_code == 200
+    assert response.json()["category_name"] == "KHAC"
 
 
 def test_classify_rejects_description_over_contract_limit() -> None:

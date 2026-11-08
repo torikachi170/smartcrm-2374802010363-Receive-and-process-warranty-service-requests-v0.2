@@ -113,14 +113,18 @@ NFR2; khi sửa hồ sơ, để trống trường điện thoại sẽ giữ ngu
 
 ## Kiểm thử
 
-Chạy test unit/API:
+Chạy toàn bộ test bằng một lệnh:
 
 ```powershell
-python -m pytest test/test_auth_service.py test/test_classify_api.py test/test_customer_api.py -v
+python -m pytest test -v
 ```
 
-Test ràng buộc PostgreSQL và kiểm tra chạy lại schema/seed dùng database riêng
-được chỉ định bởi `TEST_DATABASE_URL` trong `.env`:
+Lệnh trên chạy cả test unit/API và test PostgreSQL. Test PostgreSQL dùng
+database riêng được chỉ định bởi `TEST_DATABASE_URL` trong `.env`; nếu chưa
+cấu hình biến này, pytest sẽ đánh dấu các test PostgreSQL là skipped. Không
+trỏ `TEST_DATABASE_URL` tới database có dữ liệu thật.
+
+Có thể chạy riêng test PostgreSQL:
 
 ```powershell
 python -m pytest test/test_postgres_constraints.py -v
@@ -129,12 +133,13 @@ python -m pytest test/test_postgres_constraints.py -v
 Test PostgreSQL tạo schema ngẫu nhiên, xóa riêng schema đó khi hoàn tất và
 không được trỏ tới database có dữ liệu thật.
 
-## Tài liệu và nộp BT2
+## Tài liệu dự án
 
 - `docs/srs.md` — yêu cầu và quy tắc nghiệp vụ.
 - `docs/architecture.md` — kiến trúc đang hiện thực.
 - `docs/api-contract.md` — hợp đồng endpoint.
 - `docs/thay-doi-thiet-ke.md` — nhật ký điều chỉnh thiết kế BT2.
+- `docs/test-plan.md` và `docs/test-report.md` — kế hoạch và báo cáo kiểm thử BT3.
 - `docs/ai-disclosure.md` — khai báo công cụ hỗ trợ.
 - `docs/bug-log.md` — lỗi đã tái lập và xác nhận sửa.
 - `BT2_2374802010363_NguyenHoangMinhNhat.docx` — bản Word có thể chỉnh sửa;

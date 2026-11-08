@@ -66,3 +66,33 @@
 - Quyết định: SỬA CÓ GIỚI HẠN. Thêm một tài khoản demo cấu hình qua biến môi trường và JWT access token; không làm đăng ký, quản lý nhân viên hoặc phân quyền.
 - Lý do: Đáp ứng luồng xác thực tối thiểu của workshop mà không giả lập hệ thống nhân sự hay mở rộng thành module quản trị.
 - Ảnh hưởng: Thêm `POST /api/auth/login`; yêu cầu Bearer token ở `POST /api/classify`; token chỉ có `sub` và thời hạn, chưa đại diện `employee_id`, `center_id` hoặc vai trò. Bí mật chỉ đặt trong `.env`; cập nhật `.env.example`, README và hợp đồng API.
+
+## Sau phản hồi Bài tập 2 và workshop Buổi 14 (06/11/2026)
+
+### TD-10 Pin phiên bản dependency theo nhận xét C6
+
+- Phản hồi: `requirements.txt` dùng khoảng phiên bản (`>=`, `<`) thay vì pin chính xác bằng `==`; mục kiểm chứng C6 chưa đạt.
+- Quyết định: SỬA. Pin phiên bản các dependency trực tiếp trong `requirements.txt` theo `requirements.lock`; khai báo trực tiếp `pydantic` vì mã nguồn import package này.
+- Lý do: Cài dependency trực tiếp phải chọn đúng phiên bản đã kiểm thử, nhất quán với lock file.
+- Ảnh hưởng: Đã pin 9 dependency trực tiếp; `pip check` thành công và kiểm tra xác nhận cả 9 phiên bản khớp lock. Chạy `python -m pytest test -v`: 39 passed.
+
+### TD-11 Minh chứng báo cáo Bài tập 2
+
+- Phản hồi: Báo cáo còn câu nhắc cần xác nhận hình; ảnh minh chứng phải là kết quả lần chạy hiện tại.
+- Quyết định: SỬA báo cáo trước khi nộp; không xem ảnh cũ hoặc lời nhắc là minh chứng hoàn chỉnh.
+- Lý do: Minh chứng cần thể hiện đúng trạng thái chạy thực tế của bản đã sửa.
+- Ảnh hưởng: Cần chạy lại ứng dụng/test, chụp ảnh kết quả hiện tại và thay câu nhắc bằng minh chứng tương ứng trong báo cáo. Chưa xác nhận hoàn tất cho đến khi ảnh được cập nhật.
+
+### TD-12 Bắt đầu chuẩn bị kiểm thử Bài tập 3
+
+- Phản hồi: Buổi 14 yêu cầu Test Plan, 10–12 test case chạy thật đủ 5 loại và ảnh, cùng Bug Log có ít nhất 3 bug đã sửa; mỗi bug cần commit riêng.
+- Quyết định: BẮT ĐẦU. Tạo `docs/test-plan.md`, `docs/test-report.md`; bổ sung test biên độ dài mô tả và kiểm tra tác dụng phụ khi xóa khách có thiết bị.
+- Lý do: Chuẩn bị kiểm thử theo chức năng thực tế hiện có, không ghi nhận các luồng phiếu bảo hành chưa được prototype hiện thực.
+- Ảnh hưởng: Bộ test hiện có chạy 39 passed. Test Report đã lập 12 case nhưng cần bổ sung ảnh chụp riêng từng case trong `docs/screenshots/`. Bug Log hiện có 1 mục; cần xác minh và ghi thêm lỗi thật nếu phát hiện. Workspace chưa có metadata Git nên chưa thể tạo commit/link.
+
+### TD-13 Bổ sung minh chứng và xác minh lại kiểm thử (08/11/2026)
+
+- Phản hồi: Checklist Buổi 14 cần ảnh chạy cho từng test case, link repo/commit public và kết quả test trung thực.
+- Quyết định: THÊM 12 ảnh đầu ra pytest theo mã test và 1 ảnh kết quả suite; cập nhật Test Report và Bug Log theo repo GitHub cũ. Không tạo bug giả hoặc ghi TC-12 là PASS trong lần chạy bị thiếu PostgreSQL.
+- Lý do: Phân biệt lần chạy đầy đủ 06/11 (39 passed) với lần xác minh 08/11 trên clone sạch (26 passed, 13 skipped, 0 failed); PostgreSQL local đang dừng và không thể khởi động dịch vụ bằng quyền hiện tại.
+- Ảnh hưởng: TC-01–TC-11 chạy riêng PASS ngày 08/11; TC-12 bị SKIPPED trong lần chạy mới, dù đã PASS trong suite ngày 06/11. Tạo commit lên repo GitHub cũ trước khi tạo file Word tiến độ; phần Bug Log còn thiếu hai bug đã sửa có commit riêng.

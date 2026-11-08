@@ -168,7 +168,7 @@ def test_customer_crud_and_delete_unreferenced_record(
 def test_customer_duplicate_phone_returns_conflict(
     api_client: tuple[TestClient, InMemoryCustomerStore],
 ) -> None:
-    client, _ = api_client
+    client, store = api_client
     create_customer(client)
     response = client.post(
         "/api/customers",
@@ -177,6 +177,7 @@ def test_customer_duplicate_phone_returns_conflict(
     )
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "PHONE_EXISTS"
+    assert len(store.customers) == 1
 
 
 def test_customer_invalid_phone_returns_validation_error(
@@ -195,9 +196,9 @@ def test_customer_invalid_phone_returns_validation_error(
 def test_customer_with_device_cannot_be_deleted(
     api_client: tuple[TestClient, InMemoryCustomerStore],
 ) -> None:
-    client, _ = api_client
+    client, store = api_client
     customer_id = create_customer(client)
-    client.post(
+    device_response = client.post(
         f"/api/customers/{customer_id}/devices",
         json={
             "model_name": "Điện thoại",
@@ -206,11 +207,16 @@ def test_customer_with_device_cannot_be_deleted(
         },
         headers=headers(client),
     )
+    assert device_response.status_code == 201
+    device_id = device_response.json()["device_id"]
+
     response = client.delete(
         f"/api/customers/{customer_id}", headers=headers(client)
     )
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "CUSTOMER_HAS_DEVICES"
+    assert customer_id in store.customers
+    assert device_id in store.devices
 
 
 def test_customer_with_ticket_cannot_be_deleted(

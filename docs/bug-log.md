@@ -10,4 +10,4 @@
 | 4. Cách tái lập | Cấu hình `TEST_DATABASE_URL`, chạy test repository với `phone` có giá trị |
 | 5. Nguyên nhân | SQL dùng `:phone IS NULL OR phone = :phone`; PostgreSQL không suy ra kiểu của tham số trong nhánh `IS NULL` |
 | 6. Cách sửa | Chỉ thêm điều kiện `WHERE phone = :phone` khi có phone; nếu không thì truy vấn toàn bộ danh sách |
-| 7. Commit và xác nhận | Không có commit link vì workspace hiện chưa phải Git repository; test hồi quy PASS sau khi sửa |
+| 7. Commit và xác nhận | Bản sửa `list_customers` được đưa vào [commit 0b868899](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/0b8688998d3c362a9853cb0da596f410069fafb), cùng phần CRUD khách hàng/thiết bị. Test tích hợp `test_repository_crud_and_referenced_delete_guards` tra cứu số điện thoại sau khi tạo khách thành công trong lần chạy đầy đủ 06/11/2026 (39 passed). |
