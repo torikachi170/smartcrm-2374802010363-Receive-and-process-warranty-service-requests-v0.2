@@ -22,7 +22,7 @@
 | 4. Cách tái lập | Đọc README theo góc nhìn người nhận repo lần đầu và thử theo các bước đã ghi |
 | 5. Nguyên nhân | Tài liệu tập trung vào cách chạy của người phát triển hiện tại, chưa mô tả clean checkout |
 | 6. Cách sửa | Bổ sung clone, tạo `.env` mà không ghi đè, build/khởi động, kiểm tra trạng thái dịch vụ, hướng dẫn xử lý sự cố và cảnh báo giữ dữ liệu |
-| 7. Commit và xác nhận | [Commit ad1e6fe](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/ad1e6fe64e98b2fd159fa91477e991648009d5fe). README và Deployment Guide hiện có hai lệnh setup chính sau khi clone; chạy thực tế Docker trên máy sạch vẫn chưa xác minh vì Docker CLI không có trong môi trường kiểm tra. |
+| 7. Commit và xác nhận | [Commit 0188d40](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/0188d4067f0b7647b0490403560108418093d3cb). README và Deployment Guide hiện có hai lệnh setup chính sau khi clone; chạy thực tế Docker trên máy sạch vẫn chưa xác minh vì Docker CLI không có trong môi trường kiểm tra. |
 
 ## BUG-003 · Minor — Hợp đồng API chưa phân biệt thiết kế với triển khai
 
@@ -34,4 +34,4 @@
 | 4. Cách tái lập | So sánh routes trong `app.openapi()["paths"]` với API contract |
 | 5. Nguyên nhân | Hợp đồng thiết kế cũ không được đánh dấu rõ là chưa hiện thực |
 | 6. Cách sửa | Gắn cảnh báo phân biệt thiết kế với runtime; thêm API reference cho đúng 13 operation hiện có và loại các route phiếu chưa triển khai |
-| 7. Commit và xác nhận | [Commit c49b3ea](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/c49b3ea55ffd2d0a70f35a6f39952444018c78af). So sánh tự động cho kết quả 13 operation được tài liệu hóa, không thiếu và không thừa. |
+| 7. Commit và xác nhận | [Commit 69c8bfd](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/69c8bfd4a890155b5dd7b646fe16287c4bfdf89a). So sánh tự động cho kết quả 13 operation được tài liệu hóa, không thiếu và không thừa. |
