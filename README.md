@@ -19,6 +19,79 @@ nhân viên thật, đăng ký người dùng hoặc phân quyền theo vai trò
 
 ## Chạy toàn hệ thống bằng Docker Compose
 
+### Chạy trên máy tính mới (Windows, khuyến nghị Docker)
+
+Máy mới chỉ cần Git và Docker Desktop đang chạy; không cần cài Python hoặc
+PostgreSQL trên máy host để mở ứng dụng.
+
+1. Mở PowerShell và clone repo public:
+
+```powershell
+git clone https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2.git
+Set-Location .\smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2
+```
+
+2. Tạo cấu hình local từ mẫu. Không dùng lệnh này để ghi đè `.env` đã có:
+
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+```
+
+`.env.example` có giá trị mẫu chạy được cho demo local. Nếu dùng môi trường
+khác, thay mật khẩu/khóa mẫu bằng giá trị riêng; không commit hoặc gửi `.env`.
+`POSTGRES_PASSWORD` chỉ nên gồm chữ, số hoặc dấu gạch nối để phù hợp URL kết
+nối hiện tại; `JWT_SECRET_KEY` phải dài ít nhất 32 ký tự.
+
+Có thể kiểm tra cấu hình trước khi khởi động (tùy chọn; không cần cho luồng
+setup nhanh):
+
+```powershell
+docker compose config --quiet
+```
+
+3. Build và khởi động (lệnh setup chính thứ hai):
+
+```powershell
+docker compose up -d --build
+```
+
+Đợi cả `db` và `api` hiện `healthy`:
+
+```powershell
+docker compose ps
+```
+
+Kết quả mong đợi:
+
+- `db` và `api` có trạng thái `healthy`.
+- `Invoke-RestMethod http://127.0.0.1:8000/health` trả về `status: ok`.
+- Mở `http://127.0.0.1:8000/login` để dùng giao diện; `/docs` mở Swagger UI.
+- API health endpoint chỉ xác nhận ứng dụng phản hồi; kiểm tra riêng trạng thái
+  database bằng `docker compose ps`.
+
+Nếu cổng 8000 hoặc 5432 đang được dùng, đổi `APP_PORT` hoặc `DB_PORT` trong
+`.env`, rồi chạy lại `docker compose up -d`. Nếu Compose báo thiếu biến, kiểm
+tra `.env` có được tạo từ `.env.example` trong đúng thư mục dự án hay chưa.
+Xem log khởi động bằng:
+
+```powershell
+docker compose logs --tail 100 api db
+```
+
+Để dừng ứng dụng mà vẫn giữ dữ liệu demo:
+
+```powershell
+docker compose down
+```
+
+`docker compose down -v` xóa volume PostgreSQL và toàn bộ dữ liệu trong đó;
+chỉ dùng khi chủ ý dựng lại dữ liệu demo từ đầu.
+
+Trên macOS/Linux, thay lệnh tạo `.env` bằng `cp .env.example .env`; các lệnh
+Docker Compose còn lại tương tự.
+
+### Cấu hình và khởi động (tham khảo)
+
 Yêu cầu: Docker Desktop (hoặc Docker Engine có Compose) đang chạy.
 
 1. Tạo `.env` từ mẫu **chỉ khi chưa có**:
@@ -39,10 +112,9 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
    `http://127.0.0.1:3000/login`; nếu đặt `APP_PORT=8000`, mở
    `http://127.0.0.1:8000/login`.
 
-3. Kiểm tra cấu hình và khởi động:
+3. Build và khởi động:
 
 ```powershell
-docker compose config --quiet
 docker compose up -d --build
 ```
 
@@ -137,17 +209,20 @@ không được trỏ tới database có dữ liệu thật.
 
 - `docs/srs.md` — yêu cầu và quy tắc nghiệp vụ.
 - `docs/architecture.md` — kiến trúc đang hiện thực.
-- `docs/api-contract.md` — hợp đồng endpoint.
+- `docs/api-contract.md` — hợp đồng API theo thiết kế; đối chiếu trạng thái triển khai trước khi dùng làm tài liệu vận hành.
+- `docs/api-reference.md` — API reference của các endpoint hiện được triển khai.
 - `docs/thay-doi-thiet-ke.md` — nhật ký điều chỉnh thiết kế BT2.
 - `docs/test-plan.md` và `docs/test-report.md` — kế hoạch và báo cáo kiểm thử BT3.
+- `docs/deployment-guide.md` — hướng dẫn dựng trên máy mới.
+- `docs/checklist-bao-mat.md` — tự đánh giá bảo mật và minh chứng.
 - `docs/ai-disclosure.md` — khai báo công cụ hỗ trợ.
 - `docs/bug-log.md` — lỗi đã tái lập và xác nhận sửa.
 - `BT2_2374802010363_NguyenHoangMinhNhat.docx` — bản Word có thể chỉnh sửa;
   người nộp tự xuất PDF sau khi bổ sung ảnh minh chứng thực tế.
 
-Nộp BT2 còn cần repo GitHub public có tag `v0.2`, một PDF duy nhất theo cấu
-trúc workshop, ảnh chụp kết quả chạy/test/giao diện và xác nhận trạng thái nộp
-trên VLU E-learning.
+Đối với BT3, cần hoàn thiện tài liệu và ảnh minh chứng, kiểm tra repo public,
+đẩy tag `v1.0`, rồi nộp một PDF duy nhất qua VLU E-learning theo yêu cầu
+workshop Buổi 16.
 
 ## Đăng ký tài khoản
 
