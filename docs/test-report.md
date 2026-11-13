@@ -1,15 +1,24 @@
 # Test Report — Smart CRM L2 (BT3)
 
+Lần chạy đầy đủ gần nhất ngày **13/11/2026** trong clone repo GitHub:
+`.\.venv\Scripts\python.exe -m pytest test -q` · **39 passed, 0 failed,
+0 skipped** trong 3.40 giây. PostgreSQL integration tests đã chạy trong lượt
+này. Có một cảnh báo deprecation từ `starlette.testclient` về `httpx`.
+
+Ảnh `TC-01.png`–`TC-12.png` hiện có được chụp ngày 08/11/2026; ảnh TC-12 của
+lượt đó thể hiện SKIPPED. Chúng không phải ảnh của lần chạy 13/11 và không
+được dùng để chứng minh lần chạy mới. Cần thay ảnh minh chứng bằng ảnh terminal
+thật từ lần chạy gần nhất trước khi nộp; không dựng ảnh thay thế từ văn bản.
+
 Lần chạy đầy đủ ngày 06/11/2026:
 `.\.venv\Scripts\python.exe -m pytest test -v` · **39 passed**.
 
-Chạy xác minh lại ngày 08/11/2026 trong bản clone repo GitHub: toàn bộ suite
-**26 passed, 13 skipped, 0 failed** vì không có `TEST_DATABASE_URL` và dịch vụ
-PostgreSQL local đang dừng. TC-01–TC-11 được chạy riêng và PASS; TC-12 bị
-SKIPPED trong lần xác minh này. Ảnh từng case bên dưới là ảnh chụp trang hiển
-thị stdout/stderr thật của pytest; TC-12 thể hiện rõ trạng thái SKIPPED, không
-được dùng làm minh chứng PASS cho ngày 08/11. Đây là ảnh chụp trang hiển thị
-kết quả đã capture từ tiến trình pytest, không phải ảnh chụp terminal gốc.
+Lần xác minh ngày 08/11/2026 trong clone repo GitHub có **26 passed,
+13 skipped, 0 failed** vì thiếu `TEST_DATABASE_URL` và PostgreSQL không sẵn
+sàng. TC-01–TC-11 chạy riêng và PASS; TC-12 bị SKIPPED. Ảnh lưu cho các case
+ngày 08/11 là ảnh chụp trang hiển thị stdout/stderr đã capture từ tiến trình
+pytest, không phải ảnh terminal gốc. Các ảnh này chỉ là bằng chứng lịch sử
+của lần chạy đó.
 
 | Mã | Tiền điều kiện | Các bước | Dữ liệu thử | Kết quả mong đợi | Ưu tiên | Kết quả thực tế | PASS/FAIL và ảnh |
 |---|---|---|---|---|---|---|---|
@@ -24,7 +33,7 @@ kết quả đã capture từ tiến trình pytest, không phải ảnh chụp t
 | TC-09 (biên trên, API) | API test dùng danh mục sự cố giả | Gọi phân loại với mô tả vượt ngưỡng tối đa | `"x" * 2001` | HTTP 400; mã `VALIDATION_FAILED` | Cao | HTTP 400; `VALIDATION_FAILED` | PASS; ảnh cần chụp: `docs/screenshots/TC-09.png` |
 | TC-10 (dữ liệu sai, API) | Store khách hàng mới, chưa có số điện thoại thử | Tạo khách với số điện thoại đã được lưu | SĐT `0900000001` dùng cho hai khách | Lần tạo thứ hai trả HTTP 409, mã `PHONE_EXISTS`; không tạo khách trùng | Cao | HTTP 409; `error.code=PHONE_EXISTS` | PASS; ảnh cần chụp: `docs/screenshots/TC-10.png` |
 | TC-11 (toàn vẹn dữ liệu, API) | Có khách và thiết bị thuộc khách đó | Gửi yêu cầu xóa khách; đọc lại store | Khách có một thiết bị | HTTP 409, mã `CUSTOMER_HAS_DEVICES`; khách và thiết bị vẫn tồn tại | Cao | HTTP 409; `CUSTOMER_HAS_DEVICES`; khách và thiết bị vẫn còn trong store | PASS; ảnh cần chụp: `docs/screenshots/TC-11.png` |
-| TC-12 (tái lập, integration) | `TEST_DATABASE_URL` trỏ database thử riêng | Chạy schema và seed hai lần; đếm danh mục | Schema/seed trong repo | Không lỗi; có đúng 6 danh mục, không nhân đôi | Cao | 06/11: chạy thành công, đúng 6 danh mục. 08/11: SKIPPED vì không có cấu hình kết nối PostgreSQL | PASS ngày 06/11; chưa xác minh lại ngày 08/11. Ảnh `docs/screenshots/TC-12.png` cho thấy lần chạy bị SKIPPED |
+| TC-12 (tái lập, integration) | `TEST_DATABASE_URL` trỏ database thử riêng | Chạy schema và seed hai lần; đếm danh mục | Schema/seed trong repo | Không lỗi; có đúng 6 danh mục, không nhân đôi | Cao | 06/11: PASS; 08/11: SKIPPED; 13/11: nằm trong suite 39 passed, 0 skipped | PASS trong suite 06/11 và 13/11; ảnh TC-12 hiện có chỉ thể hiện SKIPPED ngày 08/11, cần thay ảnh |
 
 ## Lệnh chạy riêng để chụp minh chứng
 
@@ -49,14 +58,16 @@ sàng; không thay trạng thái này thành PASS.
 
 ## Tổng hợp
 
-- Lần chạy đầy đủ ngày 06/11: **39 passed**, gồm cả test PostgreSQL.
-- Xác minh lại ngày 08/11: **11 test case PASS, 0 FAIL, 1 SKIPPED** (TC-12).
-- Cả 12 test case từng được chạy và PASS ngày 06/11; TC-12 cần chạy lại để có
-  minh chứng hiện tại.
+- Lần chạy đầy đủ gần nhất ngày 13/11: **39 passed, 0 failed, 0 skipped**, gồm test
+  PostgreSQL; một cảnh báo deprecation từ `starlette.testclient` về `httpx`.
+- Lần chạy đầy đủ ngày 06/11 cũng ghi nhận **39 passed**.
+- Lần chạy ngày 08/11: **26 passed, 13 skipped, 0 failed**; TC-12 bị skip
+  trong lần đó nhưng PASS trong lần chạy 13/11.
 - Bao phủ đủ năm loại: **Có**.
-- Ảnh kết quả của 12 lệnh riêng đã được thêm vào `docs/screenshots/`; ảnh
-  TC-12 phản ánh lần chạy SKIPPED ngày 08/11.
+- Ảnh testcase hiện có là ảnh của ngày 08/11; cần chụp lại từ terminal cho
+  lần chạy mới, đặc biệt TC-12, và không dùng ảnh SKIPPED cũ làm bằng chứng
+  PASS.
 - Ảnh kết quả toàn bộ suite ngày 08/11:
   `docs/screenshots/FULL-SUITE-2026-11-08.png`.
-- Lần chạy toàn bộ suite ngày 08/11: **26 passed, 13 skipped, 0 failed**;
-  1 cảnh báo deprecation từ `starlette.testclient` về `httpx`.
+- Chưa có ảnh chụp terminal gốc cho suite ngày 13/11. Bổ sung ảnh đó và ảnh
+  của các test case theo yêu cầu nộp trước khi chốt PDF.

@@ -96,3 +96,26 @@
 - Quyết định: THÊM 12 ảnh đầu ra pytest theo mã test và 1 ảnh kết quả suite; cập nhật Test Report và Bug Log theo repo GitHub cũ. Không tạo bug giả hoặc ghi TC-12 là PASS trong lần chạy bị thiếu PostgreSQL.
 - Lý do: Phân biệt lần chạy đầy đủ 06/11 (39 passed) với lần xác minh 08/11 trên clone sạch (26 passed, 13 skipped, 0 failed); PostgreSQL local đang dừng và không thể khởi động dịch vụ bằng quyền hiện tại.
 - Ảnh hưởng: TC-01–TC-11 chạy riêng PASS ngày 08/11; TC-12 bị SKIPPED trong lần chạy mới, dù đã PASS trong suite ngày 06/11. Tạo commit lên repo GitHub cũ trước khi tạo file Word tiến độ; phần Bug Log còn thiếu hai bug đã sửa có commit riêng.
+
+## Sau khi đối chiếu lý thuyết Buổi 15–16 (13/11/2026)
+
+### TD-14 Hướng dẫn dựng dự án trên máy tính khác
+
+- Phản hồi: README phải giúp người khác mở và chạy được project trên một máy tính mới.
+- Quyết định: BỔ SUNG hướng dẫn Windows/PowerShell từ bước cài điều kiện tiên quyết, clone repo, tạo `.env`, build Compose, kiểm tra trạng thái `healthy` và mở giao diện/API docs.
+- Lý do: Hướng dẫn trước đó bắt đầu từ thư mục dự án đã có sẵn; chưa mô tả đầy đủ thao tác của người nhận repo lần đầu.
+- Ảnh hưởng: README bổ sung quy trình clone và chạy, yêu cầu Git/Docker, cổng, kiểm tra `/health`, log và cảnh báo rằng `docker compose down -v` xóa dữ liệu. `.env.example` được giữ làm mẫu; `.env` thật tiếp tục bị ignore.
+
+### TD-15 Tách API thiết kế khỏi API hiện thực
+
+- Phản hồi: Thành phần tài liệu track SE phải mô tả đúng hệ thống thật; không được khai endpoint chưa tồn tại.
+- Quyết định: BỔ SUNG `docs/api-reference.md` dựa trên routes hiện có; đánh dấu `docs/api-contract.md` là hợp đồng thiết kế lịch sử, không phải danh sách API đang chạy.
+- Lý do: Tài liệu thiết kế còn nhắc API phiếu trong khi prototype hiện có login, customer/device CRUD, classify và health, chưa có ticket routes.
+- Ảnh hưởng: README dẫn tới tài liệu hiện thực và tài liệu thiết kế riêng; các ví dụ phải tiếp tục được xác nhận bằng lần chạy API thật trước khi nộp.
+
+### TD-16 Ghi nhận trạng thái xác minh BT3 hiện tại
+
+- Phản hồi: Tiêu chí C1–C9 cần minh chứng mới, trung thực; phải phân biệt test Python với phép thử Docker máy sạch.
+- Quyết định: CẬP NHẬT Test Report theo lần chạy 13/11: 39 passed, 0 failed, 0 skipped; không tuyên bố Docker clean-room đã kiểm tra.
+- Lý do: Lần chạy mới bao gồm PostgreSQL tests, nhưng môi trường hiện tại không nhận diện Docker CLI; ảnh testcase hiện có vẫn thuộc lần chạy 08/11.
+- Ảnh hưởng: Cần cài/khởi động Docker Desktop để chạy và chụp clean-room test; chụp lại ảnh test từ terminal. Checklist bảo mật và API docs vẫn cần được đối chiếu lần cuối với kết quả thật.
