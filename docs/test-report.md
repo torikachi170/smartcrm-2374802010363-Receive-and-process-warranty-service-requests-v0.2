@@ -5,6 +5,11 @@ Lần chạy đầy đủ gần nhất ngày **13/11/2026** trong clone repo Git
 0 skipped** trong 3.40 giây. PostgreSQL integration tests đã chạy trong lượt
 này. Có một cảnh báo deprecation từ `starlette.testclient` về `httpx`.
 
+Chạy xác minh riêng TC-12 ngày **13/11/2026**:
+`.\.venv\Scripts\python.exe -m pytest test/test_postgres_constraints.py::test_schema_and_seed_can_be_applied_repeatedly -q`
+· **1 passed** trong 1.28 giây. Chưa chụp ảnh terminal cho lượt chạy riêng
+này; ảnh TC-12 đang lưu vẫn là ảnh SKIPPED ngày 08/11.
+
 Ảnh `TC-01.png`–`TC-12.png` hiện có được chụp ngày 08/11/2026; ảnh TC-12 của
 lượt đó thể hiện SKIPPED. Chúng không phải ảnh của lần chạy 13/11 và không
 được dùng để chứng minh lần chạy mới. Cần thay ảnh minh chứng bằng ảnh terminal
