@@ -1,5 +1,11 @@
 # Hợp đồng API — Luồng L2 (track SE)
 
+> **Phân biệt thiết kế và triển khai:** tài liệu này lưu hợp đồng thiết kế từ
+> các giai đoạn trước, nên có thể nhắc tới chức năng phiếu chưa được hiện thực.
+> API reference có thẩm quyền cho prototype hiện tại là
+> [`api-reference.md`](api-reference.md); chỉ tài liệu đó mô tả các route đang
+> chạy.
+
 ## 1. Danh sách endpoint
 
 | Phương thức | Đường dẫn | Mục đích | User Story | Mã trạng thái |
