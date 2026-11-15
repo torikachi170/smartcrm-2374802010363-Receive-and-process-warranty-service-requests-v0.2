@@ -119,3 +119,10 @@
 - Quyết định: CẬP NHẬT Test Report theo lần chạy 13/11: 39 passed, 0 failed, 0 skipped; không tuyên bố Docker clean-room đã kiểm tra.
 - Lý do: Lần chạy mới bao gồm PostgreSQL tests, nhưng môi trường hiện tại không nhận diện Docker CLI; ảnh testcase hiện có vẫn thuộc lần chạy 08/11.
 - Ảnh hưởng: Cần cài/khởi động Docker Desktop để chạy và chụp clean-room test; chụp lại ảnh test từ terminal. Checklist bảo mật và API docs vẫn cần được đối chiếu lần cuối với kết quả thật.
+
+### TD-17 Cập nhật dependency sau khi audit bảo mật (15/11/2026)
+
+- Phản hồi: Checklist Buổi 15 yêu cầu dependency được pin và có kết quả kiểm tra lỗ hổng cơ bản.
+- Quyết định: SỬA các bản pin bị audit cảnh báo: `pytest` từ 8.4.2 lên 9.0.3 và `opentelemetry-api` từ 1.45.1 lên 1.45.2.
+- Lý do: `pip-audit` ngày 15/11 phát hiện PYSEC-2026-1845 trong pytest và CVE-2026-126360 trong opentelemetry-api; advisory nêu phiên bản sửa tương ứng là 9.0.3 và 1.45.2.
+- Ảnh hưởng: Cập nhật `requirements.txt` và `requirements.lock` trong commit `dc205a6`; sau cập nhật, suite đạt 39 passed, `pip check` không có dependency bị hỏng, và audit cả requirements trực tiếp lẫn lock không còn lỗ hổng đã biết. Cần chạy lại audit trước release vì cơ sở dữ liệu advisory thay đổi.

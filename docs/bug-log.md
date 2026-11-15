@@ -35,3 +35,15 @@
 | 5. Nguyên nhân | Hợp đồng thiết kế cũ không được đánh dấu rõ là chưa hiện thực |
 | 6. Cách sửa | Gắn cảnh báo phân biệt thiết kế với runtime; thêm API reference cho đúng 13 operation hiện có và loại các route phiếu chưa triển khai |
 | 7. Commit và xác nhận | [Commit 69c8bfd](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/69c8bfd4a890155b5dd7b646fe16287c4bfdf89a). So sánh tự động cho kết quả 13 operation được tài liệu hóa, không thiếu và không thừa. |
+
+## BUG-004 · Medium — Dependency được pin có advisory bảo mật đã biết
+
+| Dòng | Nội dung |
+|---|---|
+| 1. Mã và mức độ | BUG-004 · Medium — `pytest` 8.4.2 và `opentelemetry-api` 1.45.1 thuộc các phiên bản bị advisory cảnh báo |
+| 2. Phát hiện bởi | `pip-audit` chạy ngày 15/11/2026 trên `requirements.txt` và `requirements.lock` |
+| 3. Triệu chứng | Audit phát hiện PYSEC-2026-1845 cho pytest (CVSS 6.8, Medium) và CVE-2026-126360 cho opentelemetry-api (CVSS 5.3, Medium) |
+| 4. Cách tái lập | Cài các phiên bản cũ từ lock rồi chạy `python -m pip_audit -r requirements.lock` |
+| 5. Nguyên nhân | Các phiên bản cũ vẫn được pin trong manifest/lock dù advisory đã có phiên bản sửa |
+| 6. Cách sửa | Nâng pytest lên 9.0.3 và opentelemetry-api lên 1.45.2; chạy lại suite, `pip check` và audit |
+| 7. Commit và xác nhận | [Commit dc205a6](https://github.com/torikachi170/smartcrm-2374802010363-Receive-and-process-warranty-service-requests-v0.2/commit/dc205a6b2a6b199e0d77eb7a8fbf4bde385a8a4a). Suite: 39 passed; `pip check`: no broken requirements; `pip-audit -r requirements.txt` và `pip-audit -r requirements.lock`: no known vulnerabilities ngày 15/11/2026. |

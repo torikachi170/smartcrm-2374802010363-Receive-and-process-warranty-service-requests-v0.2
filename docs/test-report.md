@@ -1,14 +1,19 @@
 # Test Report — Smart CRM L2 (BT3)
 
-Lần chạy đầy đủ gần nhất ngày **13/11/2026** trong clone repo GitHub:
+Lần chạy đầy đủ gần nhất ngày **15/11/2026** trong clone repo GitHub:
 `.\.venv\Scripts\python.exe -m pytest test -q` · **39 passed, 0 failed,
-0 skipped** trong 3.40 giây. PostgreSQL integration tests đã chạy trong lượt
+0 skipped** trong 2.56 giây. PostgreSQL integration tests đã chạy trong lượt
 này. Có một cảnh báo deprecation từ `starlette.testclient` về `httpx`.
 
-Chạy xác minh riêng TC-12 ngày **13/11/2026**:
+Chạy xác minh riêng TC-12 ngày **15/11/2026**:
 `.\.venv\Scripts\python.exe -m pytest test/test_postgres_constraints.py::test_schema_and_seed_can_be_applied_repeatedly -q`
-· **1 passed** trong 1.28 giây. Chưa chụp ảnh terminal cho lượt chạy riêng
+· **1 passed** trong 0.58 giây. Chưa chụp ảnh terminal cho lượt chạy riêng
 này; ảnh TC-12 đang lưu vẫn là ảnh SKIPPED ngày 08/11.
+
+Sau khi cập nhật `pytest` lên 9.0.3 và `opentelemetry-api` lên 1.45.2,
+`pip check` báo không có dependency bị hỏng. `pip-audit -r requirements.txt`
+và `pip-audit -r requirements.lock` đều báo **No known vulnerabilities
+found** ngày 15/11/2026. Chưa có ảnh terminal của các lệnh này.
 
 Ảnh `TC-01.png`–`TC-12.png` hiện có được chụp ngày 08/11/2026; ảnh TC-12 của
 lượt đó thể hiện SKIPPED. Chúng không phải ảnh của lần chạy 13/11 và không
@@ -38,7 +43,7 @@ của lần chạy đó.
 | TC-09 (biên trên, API) | API test dùng danh mục sự cố giả | Gọi phân loại với mô tả vượt ngưỡng tối đa | `"x" * 2001` | HTTP 400; mã `VALIDATION_FAILED` | Cao | HTTP 400; `VALIDATION_FAILED` | PASS; ảnh cần chụp: `docs/screenshots/TC-09.png` |
 | TC-10 (dữ liệu sai, API) | Store khách hàng mới, chưa có số điện thoại thử | Tạo khách với số điện thoại đã được lưu | SĐT `0900000001` dùng cho hai khách | Lần tạo thứ hai trả HTTP 409, mã `PHONE_EXISTS`; không tạo khách trùng | Cao | HTTP 409; `error.code=PHONE_EXISTS` | PASS; ảnh cần chụp: `docs/screenshots/TC-10.png` |
 | TC-11 (toàn vẹn dữ liệu, API) | Có khách và thiết bị thuộc khách đó | Gửi yêu cầu xóa khách; đọc lại store | Khách có một thiết bị | HTTP 409, mã `CUSTOMER_HAS_DEVICES`; khách và thiết bị vẫn tồn tại | Cao | HTTP 409; `CUSTOMER_HAS_DEVICES`; khách và thiết bị vẫn còn trong store | PASS; ảnh cần chụp: `docs/screenshots/TC-11.png` |
-| TC-12 (tái lập, integration) | `TEST_DATABASE_URL` trỏ database thử riêng | Chạy schema và seed hai lần; đếm danh mục | Schema/seed trong repo | Không lỗi; có đúng 6 danh mục, không nhân đôi | Cao | 06/11: PASS; 08/11: SKIPPED; 13/11: nằm trong suite 39 passed, 0 skipped | PASS trong suite 06/11 và 13/11; ảnh TC-12 hiện có chỉ thể hiện SKIPPED ngày 08/11, cần thay ảnh |
+| TC-12 (tái lập, integration) | `TEST_DATABASE_URL` trỏ database thử riêng | Chạy schema và seed hai lần; đếm danh mục | Schema/seed trong repo | Không lỗi; có đúng 6 danh mục, không nhân đôi | Cao | 06/11: PASS; 08/11: SKIPPED; 13/11: nằm trong suite 39 passed; 15/11: chạy riêng 1 passed trong 0.58s và suite 39 passed | PASS trong suite 06/11, 13/11, 15/11 và lần chạy riêng 15/11; ảnh TC-12 đang lưu chỉ thể hiện SKIPPED ngày 08/11, cần thay ảnh |
 
 ## Lệnh chạy riêng để chụp minh chứng
 
@@ -63,11 +68,12 @@ sàng; không thay trạng thái này thành PASS.
 
 ## Tổng hợp
 
-- Lần chạy đầy đủ gần nhất ngày 13/11: **39 passed, 0 failed, 0 skipped**, gồm test
+- Lần chạy đầy đủ gần nhất ngày 15/11: **39 passed, 0 failed, 0 skipped**, gồm test
   PostgreSQL; một cảnh báo deprecation từ `starlette.testclient` về `httpx`.
 - Lần chạy đầy đủ ngày 06/11 cũng ghi nhận **39 passed**.
+- Lần chạy đầy đủ ngày 13/11 ghi nhận **39 passed, 0 failed, 0 skipped**.
 - Lần chạy ngày 08/11: **26 passed, 13 skipped, 0 failed**; TC-12 bị skip
-  trong lần đó nhưng PASS trong lần chạy 13/11.
+  trong lần đó nhưng PASS trong các lần chạy 13/11 và 15/11.
 - Bao phủ đủ năm loại: **Có**.
 - Ảnh testcase hiện có là ảnh của ngày 08/11; cần chụp lại từ terminal cho
   lần chạy mới, đặc biệt TC-12, và không dùng ảnh SKIPPED cũ làm bằng chứng
