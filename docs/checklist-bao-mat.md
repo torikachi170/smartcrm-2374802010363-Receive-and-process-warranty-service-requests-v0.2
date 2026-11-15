@@ -5,10 +5,14 @@ Each status must be kept truthful and supported with current command output,
 test results, or screenshots under `docs/screenshots/`. Never put `.env`,
 passwords, tokens, or real personal data in a screenshot.
 
-Last recorded automated test run: 15 November 2026, `python -m pytest test -q`
-reported **39 passed, 0 failed, 0 skipped**. This verifies the tests in the
-current local environment; it is not evidence that Docker clean-room setup has
-been tested.
+Last full-suite run: 16 November 2026, `python -m pytest test -q` reported
+**39 passed, 0 failed, 0 skipped** with one deprecation warning. The
+PostgreSQL integration tests also passed: **13 passed**. On 15 November, a
+clean clone had healthy API and PostgreSQL services; `/health` returned
+`status=ok` and `/login` returned HTTP 200. Screenshots for container health
+and these HTTP checks are saved as `C1-DOCKER-HEALTH-2026-11-15.png` and
+`C1-HTTP-CHECK-2026-11-15.png`. Screenshots for the full suite and the direct
+PostgreSQL query are still pending.
 
 | # | Required check | Status | Evidence / remaining work |
 |---|---|---|---|
@@ -43,7 +47,9 @@ been tested.
    integrity cases.
 3. Sanitized API error responses and application logs.
 4. `pip check` and the 15/11/2026 package vulnerability-audit result; repeat before release.
-5. Docker health and clean-machine test evidence after Docker is available.
+5. Docker health and HTTP evidence are saved in `docs/screenshots/`; capture
+   the full-suite and direct PostgreSQL query output before marking the
+   evidence complete.
 
 Mark every item as **DONE**, **NOT DONE**, or **NOT APPLICABLE** only after
 checking the evidence. An honest **NOT DONE** with a short explanation is

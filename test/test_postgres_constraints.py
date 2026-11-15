@@ -7,6 +7,7 @@ import psycopg
 import pytest
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
 
 from src.business.customer_service import (
     CustomerService,
@@ -26,6 +27,20 @@ SEED_SQL = Path(__file__).parents[1].joinpath("db", "seed.sql").read_text(
 )
 
 
+def connect_test_database(
+    *, autocommit: bool = False, options: str | None = None
+) -> psycopg.Connection:
+    if TEST_DATABASE_URL is None:
+        raise RuntimeError("Set TEST_DATABASE_URL to run PostgreSQL constraint tests")
+
+    psycopg_url = make_url(TEST_DATABASE_URL).set(drivername="postgresql")
+    return psycopg.connect(
+        psycopg_url.render_as_string(hide_password=False),
+        autocommit=autocommit,
+        options=options,
+    )
+
+
 @pytest.fixture(scope="session")
 def isolated_schema() -> str:
     if not TEST_DATABASE_URL:
@@ -33,21 +48,21 @@ def isolated_schema() -> str:
 
     schema_name = f"track_se_test_{uuid4().hex}"
     try:
-        with psycopg.connect(TEST_DATABASE_URL, autocommit=True) as connection:
+        with connect_test_database(autocommit=True) as connection:
             connection.execute(f'CREATE SCHEMA "{schema_name}"')
             connection.execute(f'SET search_path TO "{schema_name}"')
             connection.execute(SCHEMA_SQL, prepare=False)
 
         yield schema_name
     finally:
-        with psycopg.connect(TEST_DATABASE_URL, autocommit=True) as connection:
+        with connect_test_database(autocommit=True) as connection:
             connection.execute(f'DROP SCHEMA IF EXISTS "{schema_name}" CASCADE')
 
 
 @pytest.fixture
 def database(isolated_schema: str):
-    connection = psycopg.connect(
-        TEST_DATABASE_URL, options=f"-c search_path={isolated_schema}"
+    connection = connect_test_database(
+        options=f"-c search_path={isolated_schema}"
     )
     try:
         yield connection
